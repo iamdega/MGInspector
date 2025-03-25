@@ -1,0 +1,10 @@
+Package: com.iamdega.mginspector
+Icon: https://i.postimg.cc/ncNrx8Mk/mginspector-icon.png
+Name: MGInspector
+Version: 1.0.0
+Architecture: iphoneos-arm
+Depends: firmware (>= 14.0)
+Description: Easily inspect your device's MobileGestalt information
+Maintainer: iamdega
+Author: iamdega
+Section: Application
