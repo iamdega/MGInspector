@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 struct MobileGestaltItem: Identifiable {
     let id = UUID()
@@ -12,6 +13,9 @@ struct ContentView: View {
     @State private var searchText = ""
     @State private var showingAlert = false
     @State private var copiedText = ""
+    @State private var showingShareSheet = false
+    
+    private let gestaltPlistPath = "/var/containers/Shared/SystemGroup/systemgroup.com.apple.mobilegestaltcache/Library/Caches/com.apple.MobileGestalt.plist"
     
     var filteredItems: (valid: [MobileGestaltItem], invalid: [MobileGestaltItem]) {
         let items = searchText.isEmpty ? viewModel.items :
@@ -52,6 +56,18 @@ struct ContentView: View {
                     }) {
                         Image(systemName: "arrow.clockwise")
                     }
+                    Button(action: {
+                        showingShareSheet = true
+                    }) {
+                        Image(systemName: "square.and.arrow.up")
+                    }
+                }
+            }
+            .sheet(isPresented: $showingShareSheet) {
+                if let url = URL(string: "file://\(gestaltPlistPath)") {
+                    ShareSheet(activityItems: [url])
+                } else {
+                    Text("File not found")
                 }
             }
         }
@@ -145,6 +161,17 @@ struct ItemView: View {
             showingAlert = true
         }
     }
+}
+
+struct ShareSheet: UIViewControllerRepresentable {
+    var activityItems: [Any]
+    var applicationActivities: [UIActivity]? = nil
+    
+    func makeUIViewController(context: Context) -> UIActivityViewController {
+        UIActivityViewController(activityItems: activityItems, applicationActivities: applicationActivities)
+    }
+    
+    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
 }
 
 #Preview {

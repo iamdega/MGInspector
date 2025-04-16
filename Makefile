@@ -24,12 +24,17 @@ $(XCODE_SCHEME)_INSTALL_PATH = /Applications
 
 include $(THEOS_MAKE_PATH)/xcodeproj.mk
 
+# Extract version from control file
+define VERSION
+$(shell awk -F': ' '/^Version:/ {print $$2}' control)
+endef
+
 before-package::
 ifdef BUILD_TIPA
 	mkdir -p ./packages/Payload
 	cp -R ./.theos/_/Applications/MGInspector.app ./packages/Payload
 	ldid -Sentitlements.plist ./packages/Payload/MGInspector.app/MGInspector
-	cd ./packages && zip -mry ./MGInspector_1.0.0.tipa ./Payload
+	cd ./packages && zip -mry ./MGInspector_$(VERSION).tipa ./Payload
 	mkdir -p ./.theos/_/tmp
-	cp ./packages/MGInspector_1.0.0.tipa ./.theos/_/tmp/
+	cp ./packages/MGInspector_$(VERSION).tipa ./.theos/_/tmp/
 endif
